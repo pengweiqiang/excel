@@ -8,7 +8,9 @@
   <style type="text/css">
     .textArea {
       width: 70%;
-      height: 60%;
+      height: 70%;
+      min-height: 40%;
+      min-width: 70%;
       border: 1px solid rgb(37,78,144);
       padding: 10px;
       margin: auto;
@@ -52,12 +54,12 @@
     }
 
     .confirmButton {
-      width: 100px;
+      width: 25%;
       height: 40px;
       border: 1px solid #000;
       background-color: rgb(7, 179, 7);
       color: white;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     .imageContainer {
@@ -134,7 +136,7 @@
             </div>
           </div>
           <button class="confirmButton" style="font-size: 24;" onclick="convert()" type="button">转换</button>
-          <a style="margin-left: 10; font-size: 30;font-weight: 900;" href="./excelvideo.mp4" target="_blank">视频教程(30秒)</a>
+          <p style="margin-left: 10; font-size: 30;font-weight: 900;" >查看视频教程(30秒)</p>
         </div>
          <div class="imageContainer">
           <img src="./guanzhu.jpg" style="width:150;height:180;"></img>
@@ -142,6 +144,9 @@
         </div>
 
       </div>
+      <video width="100%" height="540" controls>
+        <source src="./excelvideo.mp4" type="video/mp4">
+      </video>
   </div>
 
   <script>
@@ -191,9 +196,9 @@
         }
         return line
       })
-
-      console.log(lines.join('\n'))
-      MyCopy(lines.join('\n'))
+      var finalValue = lines.join('\n');
+      MyCopy(finalValue)
+      document.getElementById( 'textArea' ).value = finalValue
       if(colsCount > 1){
         alert(`转换完成，去Excel粘贴吧！\n图片最多有${colsCount}列\n建议将${colsCount}列宽高设置足够空间`)
       } else {
