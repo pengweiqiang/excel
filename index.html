@@ -156,6 +156,7 @@
 
       // var text = document.querySelector('.textArea').innerText;
       var  text = document.getElementById( 'textArea' ).value
+      text = text.replaceAll("\"","");
       if(text == ''){
         alert(`请输入图片链接地址`)
         return;
