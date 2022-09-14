@@ -1,0 +1,217 @@
+<html>
+
+<head>
+  <title>Excel链接url批量转图片 网页版</title>
+  <script src="https://res.zvo.cn/translate/inspector.js">
+  </script>
+  <link rel="shortcut icon" href="./favicon.ico">
+  <style type="text/css">
+    .textArea {
+      width: 70%;
+      height: 60%;
+      border: 1px solid rgb(37,78,144);
+      padding: 10px;
+      margin: auto;
+      overflow: scroll;
+      background-color: white;
+      flex: 1
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 90%;
+      padding: 10px;
+      margin: auto;
+    }
+
+    .sizeClass {
+      width: 100px;
+      height: 30px;
+      border: 1px solid #000;
+      margin: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+    }
+
+    .sizeLine {
+      display: flex;
+      align-items: center;
+
+    }
+
+    .bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 70%;
+    }
+
+    .confirmButton {
+      width: 100px;
+      height: 40px;
+      border: 1px solid #000;
+      background-color: rgb(7, 179, 7);
+      color: white;
+      margin-top: 30px;
+    }
+
+    .imageContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .confirmButton:active {
+      color: rgba(255, 255, 255, 0.6);
+      background-image: linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.1));
+      box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
+
+    body {
+      background-color: rgb(221,237,211);
+      color:rgb(37,78,144);
+    }
+    
+  </style>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+  import { getAnalytics ,logEvent} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBGmngQt8FIRp783mrwOj2P0_mQNeNYwsk",
+    authDomain: "liketools.firebaseapp.com",
+    projectId: "liketools",
+    storageBucket: "liketools.appspot.com",
+    messagingSenderId: "128319535110",
+    appId: "1:128319535110:web:af3e549e51f3e3a2baab87",
+    measurementId: "G-DW29KSM8NX"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  window.analytics = analytics;
+  window.logEvent = logEvent;
+</script>
+
+</head>
+
+<body>
+  <div class="container">
+    <p  style="font-size:30px">Excel链接url批量转图片 网页版</p>
+    <textarea class="textArea" id ="textArea" placeholder="" ></textarea>
+    <!-- <div class="textArea" placeholder="" contenteditable="true"> </div> -->
+    <div class="bottom">
+    <div class="controls" style="font-size: 18px;">
+    <br\>
+      <p>(1) Excel中，复制图片链接所在列，粘贴至上面文本框，并点击转换</p>
+      <br\>
+        <p>(2) 将需要展示图片的列单元格调整为的设置宽高像素，选中整列，进行粘贴</p>
+        <br\>
+          <p>(3) 右键点击图片，选择 “大小和属性...", 设置为"随单元格改变位置和大小" 或者按需设置 </p>
+
+          <div class="sizeLine">
+            <div>宽度(像素)</div>
+            <div class="sizeClass" id="width" contenteditable="true">
+              100
+            </div>
+            <div>高度(像素)</div>
+            <div class="sizeClass" id="height" contenteditable="true">
+              150
+            </div>
+          </div>
+          <button class="confirmButton" style="font-size: 24;" onclick="convert()" type="button">转换</button>
+          <a style="margin-left: 10; font-size: 30;font-weight: 900;" href="./excel.mp4" target="_blank">视频教程(30秒)</a>
+        </div>
+        <!-- <div class="imageContainer">
+          <img src="./weixin.png" style="width:150;height:150;"></img>
+          <p>扫码进群 定制工具</p>
+        </div> -->
+
+      </div>
+  </div>
+
+  <script>
+    function convert() {
+
+      logEvent(analytics, 'convert_click');
+
+      //LA.track('convert_click');
+
+      var widthValue = parseInt(document.querySelector('#width').innerText) || 100
+      var heightValue = parseInt(document.querySelector('#height').innerText) || 150
+
+      // var text = document.querySelector('.textArea').innerText;
+      var  text = document.getElementById( 'textArea' ).value
+      console.log(text);
+      var lines = text.split('\n')
+      
+      var colsCount = 1;
+
+      lines = lines.map(function (line) {
+
+        var imgDivs = []
+        var urls = line.split(';') || [];
+        for(var i=0; i<urls.length && line.indexOf('.')>0; i++){
+          var itemUrl = urls[i];
+          itemUrl = itemUrl.trim();
+          if (itemUrl.toLowerCase().startsWith('http://') || itemUrl.toLowerCase().startsWith('https://')) {
+            imgDivs.push(`<img src="${itemUrl}" width=${widthValue} height=${heightValue}></img>`)
+          }
+          else {
+            imgDivs.push(`<img src="http://${itemUrl}" width=${widthValue} height=${heightValue}></img>`)
+          }
+          if(imgDivs.length > colsCount){
+            colsCount = imgDivs.length
+          }
+        }
+        if(imgDivs.length){
+          return `<table>${imgDivs.join('')}</table>`
+        }
+        if(line.trim().length == 0){
+          return '<table></table>'
+        }
+        return line
+      })
+
+      console.log(lines.join('\n'))
+      MyCopy(lines.join('\n'))
+      if(colsCount > 1){
+        alert(`转换完成，去Excel粘贴吧！\n图片最多有${colsCount}列\n建议将${colsCount}列宽高设置足够空间`)
+      } else {
+        alert(`转换完成，去Excel粘贴吧！`)
+      }
+    }
+
+    function MyCopy(text) {
+      function handler(event) {
+        event.clipboardData.setData('text/plain', text);
+        document.removeEventListener('copy', handler, true);
+        event.preventDefault();
+      }
+      document.addEventListener('copy', handler, true);
+      document.execCommand('copy');
+    }
+
+  </script>
+
+
+<script charset="UTF-8" id="LA_COLLECT" src="http://sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id: "JoFfGQgfpJybgt8h",ck: "JoFfGQgfpJybgt8h",autoTrack:true,hashMode:true})</script>
+
+</body>
+
+</html>
